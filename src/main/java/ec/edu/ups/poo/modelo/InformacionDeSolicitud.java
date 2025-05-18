@@ -1,6 +1,4 @@
-// InformacionDeSolicitud.java
 package ec.edu.ups.poo.modelo;
-
 public abstract class InformacionDeSolicitud {
     protected int id;
     protected String informacionDeCompra;

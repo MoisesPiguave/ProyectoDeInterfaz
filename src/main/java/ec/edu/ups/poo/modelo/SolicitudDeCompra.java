@@ -1,9 +1,6 @@
-
 package ec.edu.ups.poo.modelo;
-
 import java.util.ArrayList;
 import java.util.List;
-
 public class SolicitudDeCompra extends InformacionDeSolicitud implements Calculable {
     private static int contador = 1;
     private Usuario usuario;

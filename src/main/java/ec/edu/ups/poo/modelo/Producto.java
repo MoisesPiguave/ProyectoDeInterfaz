@@ -1,6 +1,4 @@
-// Producto.java
 package ec.edu.ups.poo.modelo;
-
 public class Producto {
     private String idProducto;
     private String nombreDeProducto;
@@ -12,6 +10,9 @@ public class Producto {
         this.nombreDeProducto = nombre;
         this.precioUnidad = precioUnidad;
         this.cantidadEnStock = cantidadDisponible;
+    }
+
+    public Producto(String text, String text1, int precioUnidad) {
     }
 
     public String getIdProducto() {

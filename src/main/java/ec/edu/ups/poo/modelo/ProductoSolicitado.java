@@ -1,6 +1,4 @@
-
 package ec.edu.ups.poo.modelo;
-
 public class ProductoSolicitado extends InformacionDeSolicitud {
     private Producto producto;
     private int cantidadSolicitada;
