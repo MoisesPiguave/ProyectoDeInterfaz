@@ -1,5 +1,5 @@
 // Usuario.java
-package ec.edu.ups.poo;
+package ec.edu.ups.poo.modelo;
 
 public class Usuario extends Persona {
     private Rol rol;

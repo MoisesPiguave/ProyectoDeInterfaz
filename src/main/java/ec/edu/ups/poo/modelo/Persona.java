@@ -1,5 +1,5 @@
 // Persona.java
-package ec.edu.ups.poo;
+package ec.edu.ups.poo.modelo;
 
 public class Persona {
     private String cedula;

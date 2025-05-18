@@ -1,5 +1,5 @@
 // Producto.java
-package ec.edu.ups.poo;
+package ec.edu.ups.poo.modelo;
 
 public class Producto {
     private String idProducto;
