@@ -54,6 +54,7 @@ public class ProveedorView extends Frame {
         panel.add(new Label("Nombre Proveedor:"));
         panel.add(txtNombreProveedor);
         panel.add(btnCrearProveedor);
+        panel.add(new Label(""));
 
         // Campos producto
         panel.add(new Label("Código Producto:"));
@@ -63,6 +64,7 @@ public class ProveedorView extends Frame {
         panel.add(new Label("Precio Producto:"));
         panel.add(txtPrecioProducto);
         panel.add(btnAñadirProducto);
+        panel.add(new Label(""));
 
         // Botones finales
         panel.add(btnGuardarProveedor);

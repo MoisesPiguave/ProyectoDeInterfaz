@@ -29,23 +29,29 @@ public class MenuView extends Frame {
         this.productos = productos;
 
         // Panel de login
-        loginPanel = new Panel();
-        loginPanel.setLayout(new GridLayout(3, 2, 5, 5));
-        loginPanel.add(new Label("Usuario:"));
-        txtUsuario = new TextField(20);
-        loginPanel.add(txtUsuario);
+        loginPanel = new Panel(new BorderLayout(10, 10));
 
-        loginPanel.add(new Label("Contraseña:"));
+        //sub paneles para mejor orden
+        Panel camposPanel = new Panel(new GridLayout(2, 2, 10, 10));
+        camposPanel.setLayout(new GridLayout(2, 2, 10, 10));
+        camposPanel.add(new Label("Usuario:"));
+        txtUsuario = new TextField(20);
+        camposPanel.add(txtUsuario);
+
+        camposPanel.add(new Label("Contraseña:"));
         txtContrasena = new TextField(20);
         txtContrasena.setEchoChar('*');
-        loginPanel.add(txtContrasena);
+        camposPanel.add(txtContrasena);
 
+        Panel botonPanel = new Panel(new FlowLayout(FlowLayout.CENTER));
         btnIniciarSesion = new Button("Iniciar Sesión");
-        loginPanel.add(new Label(""));
-        loginPanel.add(btnIniciarSesion);
+        botonPanel.add(btnIniciarSesion);
 
-        mensajeLabel = new Label("");
-        loginPanel.add(mensajeLabel);
+        mensajeLabel = new Label("", Label.CENTER);
+
+        loginPanel.add(camposPanel, BorderLayout.NORTH);
+        loginPanel.add(botonPanel, BorderLayout.CENTER);
+        loginPanel.add(mensajeLabel, BorderLayout.SOUTH);
 
         add(loginPanel);
 
@@ -65,7 +71,8 @@ public class MenuView extends Frame {
             }
         });
 
-        setSize(400, 200);
+        setSize(800, 800);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
