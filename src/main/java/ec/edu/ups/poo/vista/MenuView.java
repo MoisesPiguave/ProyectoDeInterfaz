@@ -2,38 +2,58 @@ package ec.edu.ups.poo.vista;
 
 import ec.edu.ups.poo.modelo.Producto;
 import ec.edu.ups.poo.modelo.Proveedor;
+import ec.edu.ups.poo.modelo.Usuario;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class MenuView extends Frame {
 
-    private TextField txtUsuario;
-    private TextField txtContrasena;
-    private Button btnIniciarSesion;
+    private List<Proveedor> proveedores;
+    private List<Producto> productos;
+    private List<Usuario> usuarios;
 
-    private Label mensajeLabel;
-
+    private Panel opcionPanel;   // Para elegir entre registrar usuario o login
     private Panel loginPanel;
     private Panel menuPanel;
 
-    private List<Proveedor> proveedores;
-    private List<Producto> productos;
+    private TextField txtUsuario;
+    private TextField txtContrasena;
+    private Button btnIniciarSesion;
+    private Label mensajeLabelLogin;
 
-    public MenuView(List<Proveedor> proveedores, List<Producto> productos) {
+    public MenuView(List<Proveedor> proveedores, List<Producto> productos, List<Usuario> usuarios) {
         super("Sistema de Gestión");
 
         this.proveedores = proveedores;
         this.productos = productos;
+        this.usuarios = usuarios;
 
-        // Panel de login
-        loginPanel = new Panel(new BorderLayout(10, 10));
+        opcionPanel = new Panel(new GridLayout(3, 1, 10, 20));
+        Label preguntaLabel = new Label("Seleccione una opción", Label.CENTER);
+        Button btnRegistrarUsuario = new Button("Registrar Usuario");
+        Button btnIniciarSesionOpcion = new Button("Iniciar Sesión");
 
-        //sub paneles para mejor orden
-        Panel camposPanel = new Panel(new GridLayout(2, 2, 10, 10));
-        camposPanel.setLayout(new GridLayout(2, 2, 10, 10));
+        opcionPanel.add(preguntaLabel);
+        opcionPanel.add(btnRegistrarUsuario);
+        opcionPanel.add(btnIniciarSesionOpcion);
+
+        add(opcionPanel);
+
+        btnRegistrarUsuario.addActionListener(e -> new UsuarioView(usuarios));
+        btnIniciarSesionOpcion.addActionListener(e -> mostrarLogin());
+
+        setSize(400, 200);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private void mostrarLogin() {
+        remove(opcionPanel);
+
+        loginPanel = new Panel(new BorderLayout(10, 15));
+
+        Panel camposPanel = new Panel(new GridLayout(2, 2, 15, 15));
         camposPanel.add(new Label("Usuario:"));
         txtUsuario = new TextField(20);
         camposPanel.add(txtUsuario);
@@ -43,54 +63,49 @@ public class MenuView extends Frame {
         txtContrasena.setEchoChar('*');
         camposPanel.add(txtContrasena);
 
-        Panel botonPanel = new Panel(new FlowLayout(FlowLayout.CENTER));
+        Panel botonPanel = new Panel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         btnIniciarSesion = new Button("Iniciar Sesión");
         botonPanel.add(btnIniciarSesion);
 
-        mensajeLabel = new Label("", Label.CENTER);
+        mensajeLabelLogin = new Label("", Label.CENTER);
 
         loginPanel.add(camposPanel, BorderLayout.NORTH);
         loginPanel.add(botonPanel, BorderLayout.CENTER);
-        loginPanel.add(mensajeLabel, BorderLayout.SOUTH);
+        loginPanel.add(mensajeLabelLogin, BorderLayout.SOUTH);
 
         add(loginPanel);
+        validate();
 
-        btnIniciarSesion.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String usuario = txtUsuario.getText();
-                String contra = txtContrasena.getText();
+        btnIniciarSesion.addActionListener(e -> {
+            String usuario = txtUsuario.getText().trim();
+            String contra = txtContrasena.getText().trim();
 
-                if (usuario.isEmpty() || contra.isEmpty()) {
-                    mensajeLabel.setText("Ingrese usuario y contraseña");
-                    return;
-                }
-
-                // Para simplicidad, aceptamos cualquier usuario/contraseña
-                mostrarMenu();
+            if (usuario.isEmpty() || contra.isEmpty()) {
+                mensajeLabelLogin.setText("Ingrese usuario y contraseña");
+                return;
             }
+
+            // Aquí la validación real
+            mostrarMenu();
         });
 
-        setSize(800, 800);
+        setSize(400, 220);
         setLocationRelativeTo(null);
-        setVisible(true);
+        validate();
     }
 
     private void mostrarMenu() {
         remove(loginPanel);
 
-        menuPanel = new Panel();
-        menuPanel.setLayout(new GridLayout(0, 2, 10, 10));
+        menuPanel = new Panel(new GridLayout(0, 2, 15, 15));
 
         Label titulo = new Label("Sistema - Seleccione una opción");
         titulo.setFont(new Font("Arial", Font.BOLD, 14));
         menuPanel.add(titulo);
         menuPanel.add(new Label(""));  // para balancear columnas
 
-        // Botones para las opciones
         Button btnRegistrarUsuario = new Button("Registrar Usuario");
         Button btnRegistrarProveedor = new Button("Registrar Proveedor");
-        Button btnRegistrarProducto = new Button("Registrar Producto");
         Button btnCrearSolicitudCompra = new Button("Crear Solicitud de Compra");
         Button btnListarProveedores = new Button("Listar Proveedores");
         Button btnListarProductos = new Button("Listar Productos");
@@ -103,10 +118,8 @@ public class MenuView extends Frame {
         Button btnMostrarTotalSolicitud = new Button("Mostrar Total Solicitud");
         Button btnSalir = new Button("Salir");
 
-        // Añadir botones al panel
         menuPanel.add(btnRegistrarUsuario);
         menuPanel.add(btnRegistrarProveedor);
-        menuPanel.add(btnRegistrarProducto);
         menuPanel.add(btnCrearSolicitudCompra);
         menuPanel.add(btnListarProveedores);
         menuPanel.add(btnListarProductos);
@@ -119,31 +132,36 @@ public class MenuView extends Frame {
         menuPanel.add(btnMostrarTotalSolicitud);
         menuPanel.add(btnSalir);
 
-        // Mensaje para mostrar estado
+        // Espacio para mensajes de estado
         Label estadoLabel = new Label("");
+        menuPanel.add(new Label(""));
         menuPanel.add(estadoLabel);
-        menuPanel.add(new Label(""));  // espacio para alinear
 
         add(menuPanel);
         validate();
-
-        // Listeners botones
 
         btnRegistrarProveedor.addActionListener(e -> {
             new ProveedorView(proveedores);
             estadoLabel.setText("Abrió ventana Registrar Proveedor");
         });
 
-        btnRegistrarProducto.addActionListener(e -> {
-            new ProductoView(productos);
-            estadoLabel.setText("Abrió ventana Registrar Producto");
+        btnRegistrarUsuario.addActionListener(e -> {
+            new UsuarioView(usuarios);
+            estadoLabel.setText("Abrió ventana Registrar Usuario");
         });
 
-
-        btnRegistrarUsuario.addActionListener(e -> estadoLabel.setText("Funcionalidad Registrar Usuario no implementada"));
         btnCrearSolicitudCompra.addActionListener(e -> estadoLabel.setText("Funcionalidad Crear Solicitud no implementada"));
-        btnListarProveedores.addActionListener(e -> estadoLabel.setText("Funcionalidad Listar Proveedores no implementada"));
-        btnListarProductos.addActionListener(e -> estadoLabel.setText("Funcionalidad Listar Productos no implementada"));
+
+        btnListarProveedores.addActionListener(e -> {
+            new ListProveedorView(proveedores);
+            estadoLabel.setText("Mostrando lista de proveedores");
+        });
+
+        btnListarProductos.addActionListener(e -> {
+            new ListProductoView(proveedores);
+            estadoLabel.setText("Mostrando lista de productos");
+        });
+
         btnListarSolicitudes.addActionListener(e -> estadoLabel.setText("Funcionalidad Listar Solicitudes no implementada"));
         btnBuscarUsuario.addActionListener(e -> estadoLabel.setText("Funcionalidad Buscar Usuario no implementada"));
         btnBuscarProveedor.addActionListener(e -> estadoLabel.setText("Funcionalidad Buscar Proveedor no implementada"));
@@ -156,5 +174,9 @@ public class MenuView extends Frame {
             dispose();
             System.exit(0);
         });
+
+        setSize(450, 400);
+        setLocationRelativeTo(null);
+        validate();
     }
 }

@@ -15,6 +15,7 @@ public class ProveedorView extends Frame {
     private TextField txtCodigoProducto;
     private TextField txtNombreProducto;
     private TextField txtPrecioProducto;
+    private TextField txtStockProducto;
 
     private Button btnCrearProveedor;
     private Button btnAñadirProducto;
@@ -30,7 +31,6 @@ public class ProveedorView extends Frame {
         super("Proveedor");
 
         this.proveedores = proveedores;
-        proveedor = new Proveedor();
 
         Panel panel = new Panel();
         panel.setLayout(new GridLayout(0, 2, 5, 5));
@@ -40,6 +40,7 @@ public class ProveedorView extends Frame {
         txtCodigoProducto = new TextField(20);
         txtNombreProducto = new TextField(20);
         txtPrecioProducto = new TextField(20);
+        txtStockProducto = new TextField(20);
 
         btnCrearProveedor = new Button("Crear Proveedor");
         btnAñadirProducto = new Button("Añadir Producto");
@@ -63,6 +64,8 @@ public class ProveedorView extends Frame {
         panel.add(txtNombreProducto);
         panel.add(new Label("Precio Producto:"));
         panel.add(txtPrecioProducto);
+        panel.add(new Label("Stock Disponible:"));
+        panel.add(txtStockProducto);
         panel.add(btnAñadirProducto);
         panel.add(new Label(""));
 
@@ -70,21 +73,30 @@ public class ProveedorView extends Frame {
         panel.add(btnGuardarProveedor);
         panel.add(btnSalirProveedor);
 
-        panel.add(new Label("")); // espacio
-        panel.add(mensajeLabel);  // mensajes
+        panel.add(new Label(""));
+        panel.add(mensajeLabel);
+
+        // Validaciones para nombres (solo letras y espacios)
+        final String regexNombres = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$";
 
         // Crear proveedor
         btnCrearProveedor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String codigo = txtCodigoProveedor.getText();
-                String nombre = txtNombreProveedor.getText();
+                String codigo = txtCodigoProveedor.getText().trim();
+                String nombre = txtNombreProveedor.getText().trim();
 
                 if (codigo.isEmpty() || nombre.isEmpty()) {
                     mensajeLabel.setText("Debe ingresar código y nombre del proveedor.");
                     return;
                 }
 
+                if (!nombre.matches(regexNombres)) {
+                    mensajeLabel.setText("Nombre del proveedor solo puede contener letras y espacios.");
+                    return;
+                }
+
+                proveedor = new Proveedor();
                 proveedor.setCedula(codigo);
                 proveedor.setNombre(nombre);
                 mensajeLabel.setText("Proveedor creado.");
@@ -95,19 +107,51 @@ public class ProveedorView extends Frame {
         btnAñadirProducto.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String codigo = txtCodigoProducto.getText();
-                String nombre = txtNombreProducto.getText();
-                String precioTexto = txtPrecioProducto.getText();
+                if (proveedor == null || proveedor.getCedula() == null || proveedor.getNombre() == null) {
+                    mensajeLabel.setText("Debe crear un proveedor antes de añadir productos.");
+                    return;
+                }
 
-                if (codigo.isEmpty() || nombre.isEmpty() || precioTexto.isEmpty()) {
+                String codigo = txtCodigoProducto.getText().trim();
+                String nombre = txtNombreProducto.getText().trim();
+                String precioTexto = txtPrecioProducto.getText().trim();
+                String stockTexto = txtStockProducto.getText().trim();
+
+                if (codigo.isEmpty() || nombre.isEmpty() || precioTexto.isEmpty() || stockTexto.isEmpty()) {
                     mensajeLabel.setText("Debe completar todos los campos del producto.");
                     return;
                 }
-                double precio = Double.parseDouble(precioTexto);
 
-                Producto producto = new Producto(codigo, nombre, precio, 0); // stock por defecto
-                proveedor.agregarProducto(producto);
-                mensajeLabel.setText("Producto añadido.");
+                if (!nombre.matches(regexNombres)) {
+                    mensajeLabel.setText("Nombre del producto solo puede contener letras y espacios.");
+                    return;
+                }
+
+                try {
+                    double precio = Double.parseDouble(precioTexto);
+                    if (precio < 0) {
+                        mensajeLabel.setText("El precio debe ser un número positivo.");
+                        return;
+                    }
+                    int stock = Integer.parseInt(stockTexto);
+                    if (stock < 0) {
+                        mensajeLabel.setText("El stock debe ser un número positivo.");
+                        return;
+                    }
+
+                    Producto producto = new Producto(codigo, nombre, precio, stock);
+                    proveedor.agregarProducto(producto);
+                    mensajeLabel.setText("Producto añadido.");
+
+                    // Limpiar campos de producto
+                    txtCodigoProducto.setText("");
+                    txtNombreProducto.setText("");
+                    txtPrecioProducto.setText("");
+                    txtStockProducto.setText("");
+
+                } catch (NumberFormatException ex) {
+                    mensajeLabel.setText("El precio debe ser decimal y el stock entero válidos.");
+                }
             }
         });
 
@@ -115,8 +159,22 @@ public class ProveedorView extends Frame {
         btnGuardarProveedor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (proveedor == null || proveedor.getCedula() == null || proveedor.getNombre() == null) {
+                    mensajeLabel.setText("Debe crear un proveedor antes de guardar.");
+                    return;
+                }
+
                 proveedores.add(proveedor);
                 mensajeLabel.setText("Proveedor guardado con " + proveedor.getProductos().size() + " producto(s).");
+
+                // Limpiar todo
+                txtCodigoProveedor.setText("");
+                txtNombreProveedor.setText("");
+                txtCodigoProducto.setText("");
+                txtNombreProducto.setText("");
+                txtPrecioProducto.setText("");
+                txtStockProducto.setText("");
+                proveedor = null;
             }
         });
 
@@ -129,9 +187,8 @@ public class ProveedorView extends Frame {
         });
 
         add(panel);
-        setSize(500, 400);
+        setSize(500, 450);
         setVisible(true);
     }
-
 }
 

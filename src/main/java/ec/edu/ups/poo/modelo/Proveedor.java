@@ -1,4 +1,3 @@
-
 package ec.edu.ups.poo.modelo;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +11,7 @@ public class Proveedor extends Persona {
 
     public Proveedor() {
         super();
+        this.productos = new ArrayList<>();
     }
 
     public void setProductos(List<Producto> productos) {
@@ -31,4 +31,5 @@ public class Proveedor extends Persona {
         return super.toString() + ", Proveedor de " + productos.size() + " productos";
     }
 }
+
 
