@@ -83,7 +83,7 @@ public class BuscarUsuarioView extends Frame {
 
 
 
-        setSize(400, 150);
+        setSize(1000, 150);
         setLocationRelativeTo(null);
         setVisible(true);
     }
