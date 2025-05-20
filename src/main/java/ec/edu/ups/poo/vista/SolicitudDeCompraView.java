@@ -22,7 +22,7 @@ public class SolicitudDeCompraView extends Frame {
     private List<Usuario> usuarios;
     private List<Producto> productos;
 
-    public SolicitudDeCompraView(List<Usuario> usuarios, List<Producto> productos) {
+    public SolicitudDeCompraView(List<Usuario> usuarios, List<Producto> productos, List<SolicitudDeCompra> solicitudes) {
         super("Solicitud de Compra");
 
         this.usuarios = usuarios;

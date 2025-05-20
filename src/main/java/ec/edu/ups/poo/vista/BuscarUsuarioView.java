@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class BuscarUsuarioView extends Frame {
+    private Button btnSalirBuscarUsuario;
 
     private TextField txtCedulaBusqueda;
     private Button btnBuscar;
@@ -17,20 +18,23 @@ public class BuscarUsuarioView extends Frame {
 
     public BuscarUsuarioView(List<Usuario> usuarios) {
         super("Buscar Usuario");
+        btnSalirBuscarUsuario = new Button("Salir");
 
         this.usuarios = usuarios;
 
-        setLayout(new GridLayout(3, 2, 10, 10));
+        Panel mmpa = new Panel();
+        mmpa.setLayout(new GridLayout(3, 2, 10, 10));
 
-        add(new Label("Ingrese Cédula:"));
+        mmpa.add(new Label("Ingrese Cédula:"));
         txtCedulaBusqueda = new TextField(20);
-        add(txtCedulaBusqueda);
+        mmpa.add(txtCedulaBusqueda);
 
         btnBuscar = new Button("Buscar");
-        add(btnBuscar);
+        mmpa.add(btnBuscar);
 
         resultadoLabel = new Label("");
-        add(resultadoLabel);
+        mmpa.add(resultadoLabel);
+
 
         btnBuscar.addActionListener(new ActionListener() {
             @Override
@@ -58,6 +62,26 @@ public class BuscarUsuarioView extends Frame {
                 }
             }
         });
+
+        setLayout(new BorderLayout());
+
+        btnSalirBuscarUsuario = new Button("Salir");
+        Panel panelBoton = new Panel(new FlowLayout(FlowLayout.RIGHT));
+        panelBoton.add(btnSalirBuscarUsuario);
+        add(panelBoton, BorderLayout.SOUTH);
+
+
+
+        btnSalirBuscarUsuario.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+
+        add(mmpa);
+
+
 
         setSize(400, 150);
         setLocationRelativeTo(null);
