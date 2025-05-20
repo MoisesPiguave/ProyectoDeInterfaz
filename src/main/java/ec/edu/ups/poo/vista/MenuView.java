@@ -3,6 +3,7 @@ package ec.edu.ups.poo.vista;
 import ec.edu.ups.poo.modelo.Producto;
 import ec.edu.ups.poo.modelo.Proveedor;
 import ec.edu.ups.poo.modelo.Usuario;
+import ec.edu.ups.poo.modelo.SolicitudDeCompra;
 
 import java.awt.*;
 import java.util.List;
@@ -12,8 +13,9 @@ public class MenuView extends Frame {
     private List<Proveedor> proveedores;
     private List<Producto> productos;
     private List<Usuario> usuarios;
+    private List<SolicitudDeCompra> solicitudes;
 
-    private Panel opcionPanel;   // Para elegir entre registrar usuario o login
+    private Panel opcionPanel;
     private Panel loginPanel;
     private Panel menuPanel;
 
@@ -22,12 +24,13 @@ public class MenuView extends Frame {
     private Button btnIniciarSesion;
     private Label mensajeLabelLogin;
 
-    public MenuView(List<Proveedor> proveedores, List<Producto> productos, List<Usuario> usuarios) {
+    public MenuView(List<Proveedor> proveedores, List<Producto> productos, List<Usuario> usuarios, List<SolicitudDeCompra> solicitudes) {
         super("Sistema de Gestión");
 
         this.proveedores = proveedores;
         this.productos = productos;
         this.usuarios = usuarios;
+        this.solicitudes = solicitudes;
 
         opcionPanel = new Panel(new GridLayout(3, 1, 10, 20));
         Label preguntaLabel = new Label("Seleccione una opción", Label.CENTER);
@@ -85,7 +88,7 @@ public class MenuView extends Frame {
                 return;
             }
 
-            // Aquí la validación real
+            // Aquí la validación real de usuario y contraseña si tienes
             mostrarMenu();
         });
 
@@ -102,7 +105,7 @@ public class MenuView extends Frame {
         Label titulo = new Label("Sistema - Seleccione una opción");
         titulo.setFont(new Font("Arial", Font.BOLD, 14));
         menuPanel.add(titulo);
-        menuPanel.add(new Label(""));  // para balancear columnas
+        menuPanel.add(new Label(""));
 
         Button btnRegistrarUsuario = new Button("Registrar Usuario");
         Button btnRegistrarProveedor = new Button("Registrar Proveedor");
@@ -132,7 +135,6 @@ public class MenuView extends Frame {
         menuPanel.add(btnMostrarTotalSolicitud);
         menuPanel.add(btnSalir);
 
-        // Espacio para mensajes de estado
         Label estadoLabel = new Label("");
         menuPanel.add(new Label(""));
         menuPanel.add(estadoLabel);
@@ -150,7 +152,10 @@ public class MenuView extends Frame {
             estadoLabel.setText("Abrió ventana Registrar Usuario");
         });
 
-        btnCrearSolicitudCompra.addActionListener(e -> estadoLabel.setText("Funcionalidad Crear Solicitud no implementada"));
+        btnCrearSolicitudCompra.addActionListener(e -> {
+            new SolicitudDeCompraView(usuarios, productos, solicitudes);
+            estadoLabel.setText("Abrió ventana Crear Solicitud de Compra");
+        });
 
         btnListarProveedores.addActionListener(e -> {
             new ListProveedorView(proveedores);
@@ -162,8 +167,16 @@ public class MenuView extends Frame {
             estadoLabel.setText("Mostrando lista de productos");
         });
 
-        btnListarSolicitudes.addActionListener(e -> estadoLabel.setText("Funcionalidad Listar Solicitudes no implementada"));
-        btnBuscarUsuario.addActionListener(e -> estadoLabel.setText("Funcionalidad Buscar Usuario no implementada"));
+        btnListarSolicitudes.addActionListener(e -> {
+            new ListSolicitudesView(solicitudes);
+            estadoLabel.setText("Mostrando lista de solicitudes");
+        });
+
+        btnBuscarUsuario.addActionListener(e -> {
+            new BuscarUsuarioView(usuarios);
+            estadoLabel.setText("Abrió ventana Buscar Usuario");
+        });
+
         btnBuscarProveedor.addActionListener(e -> estadoLabel.setText("Funcionalidad Buscar Proveedor no implementada"));
         btnBuscarProducto.addActionListener(e -> estadoLabel.setText("Funcionalidad Buscar Producto no implementada"));
         btnBuscarSolicitud.addActionListener(e -> estadoLabel.setText("Funcionalidad Buscar Solicitud no implementada"));
@@ -180,3 +193,4 @@ public class MenuView extends Frame {
         validate();
     }
 }
+
