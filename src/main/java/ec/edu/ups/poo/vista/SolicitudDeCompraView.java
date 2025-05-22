@@ -1,142 +1,109 @@
 package ec.edu.ups.poo.vista;
 
-import ec.edu.ups.poo.modelo.*;
+import ec.edu.ups.poo.modelo.Producto;
+import ec.edu.ups.poo.modelo.SolicitudDeCompra;
+import ec.edu.ups.poo.modelo.Usuario;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class SolicitudDeCompraView extends Frame {
 
-    private Choice choiceUsuarios;
-    private TextArea txtInformacion;
-    private Choice choiceProductos;
-    private TextField txtCantidad;
-    private Button btnCrearSolicitud;
-    private Button btnAgregarProducto;
-    private Button btnMostrarResumen;
-    private Button btnSalir;
-    private Label mensajeLabel;
-
-    private SolicitudDeCompra solicitud;
-    private List<Usuario> usuarios;
-    private List<Producto> productos;
+    private Choice usuarioChoice;
+    private Choice productoChoice;
+    private TextField cantidadField;
+    private Button crearSolicitudButton;
+    private Label estadoLabel;
 
     public SolicitudDeCompraView(List<Usuario> usuarios, List<Producto> productos, List<SolicitudDeCompra> solicitudes) {
-        super("Solicitud de Compra");
+        super("Crear Solicitud de Compra");
 
-        this.usuarios = usuarios;
-        this.productos = productos;
+        setLayout(new GridLayout(5, 2, 10, 10));
 
-        Panel panel = new Panel();
-        panel.setLayout(new GridLayout(0, 2, 10, 10));
-
-        choiceUsuarios = new Choice();
-        for (Usuario u : usuarios) {
-            choiceUsuarios.add(u.getCedula() + " - " + u.getNombre());
+        add(new Label("Seleccione Usuario:"));
+        usuarioChoice = new Choice();
+        for (Usuario usuario : usuarios) {
+            usuarioChoice.add(usuario.getCedula() + " - " + usuario.getNombre());
         }
+        add(usuarioChoice);
 
-        txtInformacion = new TextArea(3, 20);
-
-        choiceProductos = new Choice();
-        for (Producto p : productos) {
-            choiceProductos.add(p.getIdProducto() + " - " + p.getNombreDeProducto());
+        add(new Label("Seleccione Producto:"));
+        productoChoice = new Choice();
+        for (Producto producto : productos) {
+            productoChoice.add(producto.getIdProducto() + " - " + producto.getNombreDeProducto());
         }
+        add(productoChoice);
 
-        txtCantidad = new TextField(10);
+        add(new Label("Cantidad:"));
+        cantidadField = new TextField();
+        add(cantidadField);
 
-        btnCrearSolicitud = new Button("Crear Solicitud");
-        btnAgregarProducto = new Button("Agregar Producto");
-        btnMostrarResumen = new Button("Mostrar Resumen");
-        btnSalir = new Button("Salir");
+        crearSolicitudButton = new Button("Crear Solicitud");
+        add(crearSolicitudButton);
 
-        mensajeLabel = new Label("");
+        estadoLabel = new Label("");
+        add(estadoLabel);
 
-        panel.add(new Label("Usuario:"));
-        panel.add(choiceUsuarios);
+        crearSolicitudButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String usuarioSeleccionado = usuarioChoice.getSelectedItem();
+                String productoSeleccionado = productoChoice.getSelectedItem();
+                String cantidadTexto = cantidadField.getText();
 
-        panel.add(new Label("Información de compra:"));
-        panel.add(txtInformacion);
+                if (usuarioSeleccionado == null || productoSeleccionado == null || cantidadTexto.isEmpty()) {
+                    estadoLabel.setText("Debe completar todos los campos");
+                    return;
+                }
 
-        panel.add(btnCrearSolicitud);
-        panel.add(new Label(""));
+                try {
+                    int cantidad = Integer.parseInt(cantidadTexto);
+                    if (cantidad <= 0) {
+                        estadoLabel.setText("Cantidad debe ser positiva");
+                        return;
+                    }
 
-        panel.add(new Label("Producto:"));
-        panel.add(choiceProductos);
+                    String cedulaUsuario = usuarioSeleccionado.split(" - ")[0];
+                    String codigoProducto = productoSeleccionado.split(" - ")[0];
 
-        panel.add(new Label("Cantidad:"));
-        panel.add(txtCantidad);
+                    Usuario usuario = null;
+                    for (Usuario u : usuarios) {
+                        if (u.getCedula().equals(cedulaUsuario)) {
+                            usuario = u;
+                            break;
+                        }
+                    }
 
-        panel.add(btnAgregarProducto);
-        panel.add(new Label(""));
+                    Producto producto = null;
+                    for (Producto p : productos) {
+                        if (p.getIdProducto().equals(codigoProducto)) {
+                            producto = p;
+                            break;
+                        }
+                    }
 
-        panel.add(btnMostrarResumen);
-        panel.add(btnSalir);
+                    if (usuario == null || producto == null) {
+                        estadoLabel.setText("Usuario o producto no encontrados");
+                        return;
+                    }
 
-        panel.add(new Label(""));
-        panel.add(mensajeLabel);
+                    SolicitudDeCompra solicitud = new SolicitudDeCompra();
+                    solicitud.setUsuario(usuario);
+                    solicitud.agregarProducto(producto, cantidad);
+                    solicitudes.add(solicitud);
 
-        btnCrearSolicitud.addActionListener((ActionEvent e) -> {
-            int selectedIndex = choiceUsuarios.getSelectedIndex();
-            String info = txtInformacion.getText().trim();
+                    estadoLabel.setText("Solicitud creada correctamente");
 
-            if (selectedIndex < 0 || info.isEmpty()) {
-                mensajeLabel.setText("Complete los campos para crear la solicitud.");
-                return;
+                } catch (NumberFormatException ex) {
+                    estadoLabel.setText("Cantidad inválida");
+                }
             }
-
-            Usuario usuario = usuarios.get(selectedIndex);
-            solicitud = new SolicitudDeCompra(usuario, info);
-            mensajeLabel.setText("Solicitud creada.");
         });
 
-        btnAgregarProducto.addActionListener((ActionEvent e) -> {
-            if (solicitud == null) {
-                mensajeLabel.setText("Primero cree una solicitud.");
-                return;
-            }
-
-            int selectedIndex = choiceProductos.getSelectedIndex();
-            String cantidadTexto = txtCantidad.getText().trim();
-
-            if (selectedIndex < 0 || cantidadTexto.isEmpty()) {
-                mensajeLabel.setText("Seleccione un producto y cantidad.");
-                return;
-            }
-
-            boolean esNumero = cantidadTexto.chars().allMatch(Character::isDigit);
-            if (!esNumero) {
-                mensajeLabel.setText("Cantidad inválida.");
-                return;
-            }
-
-            int cantidad = Integer.parseInt(cantidadTexto);
-            if (cantidad <= 0) {
-                mensajeLabel.setText("Cantidad debe ser mayor a cero.");
-                return;
-            }
-
-            Producto producto = productos.get(selectedIndex);
-            solicitud.agregarItem(producto, cantidad);
-            mensajeLabel.setText("Producto agregado.");
-            txtCantidad.setText("");
-        });
-
-        btnMostrarResumen.addActionListener((ActionEvent e) -> {
-            if (solicitud == null) {
-                mensajeLabel.setText("No hay solicitud creada.");
-                return;
-            }
-            solicitud.mostrarResumen();
-        });
-
-        btnSalir.addActionListener(e -> dispose());
-
-        add(panel);
-        setSize(520, 480);
+        setSize(400, 250);
         setLocationRelativeTo(null);
         setVisible(true);
     }
 }
-
-

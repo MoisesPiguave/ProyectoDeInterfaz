@@ -1,71 +1,50 @@
 package ec.edu.ups.poo.modelo;
+
 import java.util.ArrayList;
 import java.util.List;
-public class SolicitudDeCompra extends InformacionDeSolicitud implements Calculable {
-    private static int contador = 1;
+
+public class SolicitudDeCompra {
+
     private Usuario usuario;
-    private Estado estado;
-    private List<ProductoSolicitado> items;
+    private List<Producto> productos;
+    private List<Integer> cantidades;
 
-    public SolicitudDeCompra(Usuario usuario, String informacion) {
-        this.id = contador++;
+    public SolicitudDeCompra() {
+        productos = new ArrayList<>();
+        cantidades = new ArrayList<>();
+    }
+
+    public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-        this.informacionDeCompra = informacion;
-        this.estado = Estado.SOLICITADA;
-        this.items = new ArrayList<>();
-    }
-
-    @Override
-    public double calcularSubTotal(ProductoSolicitado item) {
-        return item.getProducto().getPrecioUnidad() * item.getCantidadSolicitada();
-    }
-
-    @Override
-    public double calcularTotal() {
-        double total = 0;
-        for (ProductoSolicitado item : items) {
-            total += calcularSubTotal(item);
-        }
-        return total;
-    }
-
-    public void agregarItem(Producto producto, int cantidad) {
-        if (cantidad > 0) {
-            items.add(new ProductoSolicitado(producto, cantidad));
-        }
-    }
-
-    public void cambiarEstado(Estado nuevoEstado) {
-        this.estado = nuevoEstado;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public List<ProductoSolicitado> getItems() {
-        return items;
     }
 
     public Usuario getUsuario() {
         return usuario;
     }
 
-    public void mostrarResumen() {
-        System.out.println("Solicitud #" + id);
-        System.out.println("Usuario: " + usuario);
-        System.out.println("Departamento: " + usuario.getDepartamento());
-        System.out.println("Estado: " + estado);
-        System.out.println("Detalle de la compra:");
-        for (ProductoSolicitado item : items) {
-            System.out.println(" - " + item);
+    public void agregarProducto(Producto producto, int cantidad) {
+        productos.add(producto);
+        cantidades.add(cantidad);
+    }
+
+    public List<Producto> getProductos() {
+        return productos;
+    }
+
+    public List<Integer> getCantidades() {
+        return cantidades;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Solicitud de Compra para ").append(usuario.getNombre()).append(":\n");
+        for (int i = 0; i < productos.size(); i++) {
+            sb.append("- ")
+                    .append(productos.get(i).getNombreDeProducto())
+                    .append(" x ").append(cantidades.get(i))
+                    .append("\n");
         }
-        System.out.println("Total: $" + calcularTotal());
+        return sb.toString();
     }
 }
-
-

@@ -1,17 +1,14 @@
 package ec.edu.ups.poo.vista;
 
-import ec.edu.ups.poo.modelo.Producto;
-import ec.edu.ups.poo.modelo.Proveedor;
-import ec.edu.ups.poo.modelo.Usuario;
-import ec.edu.ups.poo.modelo.SolicitudDeCompra;
+import ec.edu.ups.poo.modelo.*;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MenuView extends Frame {
 
     private List<Proveedor> proveedores;
-    private List<Producto> productos;
     private List<Usuario> usuarios;
     private List<SolicitudDeCompra> solicitudes;
 
@@ -24,11 +21,10 @@ public class MenuView extends Frame {
     private Button btnIniciarSesion;
     private Label mensajeLabelLogin;
 
-    public MenuView(List<Proveedor> proveedores, List<Producto> productos, List<Usuario> usuarios, List<SolicitudDeCompra> solicitudes) {
+    public MenuView(List<Proveedor> proveedores, List<Usuario> usuarios, List<SolicitudDeCompra> solicitudes) {
         super("Sistema de Gestión");
 
         this.proveedores = proveedores;
-        this.productos = productos;
         this.usuarios = usuarios;
         this.solicitudes = solicitudes;
 
@@ -80,15 +76,14 @@ public class MenuView extends Frame {
         validate();
 
         btnIniciarSesion.addActionListener(e -> {
-            String usuario = txtUsuario.getText().trim();
-            String contra = txtContrasena.getText().trim();
+            String usuario = txtUsuario.getText();
+            String contra = txtContrasena.getText();
 
             if (usuario.isEmpty() || contra.isEmpty()) {
                 mensajeLabelLogin.setText("Ingrese usuario y contraseña");
                 return;
             }
 
-            // Aquí la validación real de usuario y contraseña si tienes
             mostrarMenu();
         });
 
@@ -153,6 +148,12 @@ public class MenuView extends Frame {
         });
 
         btnCrearSolicitudCompra.addActionListener(e -> {
+            // obtener todos los productos de todos los proveedores
+            List<Producto> productos = new ArrayList<>();
+            for (Proveedor p : proveedores) {
+                productos.addAll(p.getProductos());
+            }
+
             new SolicitudDeCompraView(usuarios, productos, solicitudes);
             estadoLabel.setText("Abrió ventana Crear Solicitud de Compra");
         });
@@ -177,8 +178,16 @@ public class MenuView extends Frame {
             estadoLabel.setText("Abrió ventana Buscar Usuario");
         });
 
-        btnBuscarProveedor.addActionListener(e -> estadoLabel.setText("Funcionalidad Buscar Proveedor no implementada"));
-        btnBuscarProducto.addActionListener(e -> estadoLabel.setText("Funcionalidad Buscar Producto no implementada"));
+        btnBuscarProveedor.addActionListener(e -> {
+            new BuscarProveedorView(proveedores);
+            estadoLabel.setText("Abrió ventana Buscar Proveedor");
+        });
+
+        btnBuscarProducto.addActionListener(e -> {
+            new BuscarProductoView(proveedores);
+            estadoLabel.setText("Abrió ventana Buscar Producto");
+        });
+
         btnBuscarSolicitud.addActionListener(e -> estadoLabel.setText("Funcionalidad Buscar Solicitud no implementada"));
         btnCambiarEstadoSolicitud.addActionListener(e -> estadoLabel.setText("Funcionalidad Cambiar Estado Solicitud no implementada"));
         btnMostrarTotalSolicitud.addActionListener(e -> estadoLabel.setText("Funcionalidad Mostrar Total Solicitud no implementada"));
@@ -193,4 +202,3 @@ public class MenuView extends Frame {
         validate();
     }
 }
-

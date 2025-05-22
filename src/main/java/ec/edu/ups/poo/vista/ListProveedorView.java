@@ -17,12 +17,12 @@ public class ListProveedorView extends Frame {
         Panel mainPanel = new Panel();
         mainPanel.setLayout(new GridLayout(0, 1, 0, 8)); // espacio vertical entre filas
 
-        // Cabecera con FlowLayout y espacio interno
-        Panel header = new Panel(new FlowLayout(FlowLayout.LEFT, 40, 5));
-        header.add(new Label("ID"));
-        header.add(new Label("Nombre"));
-        header.add(new Label("Teléfono"));
-        mainPanel.add(header);
+
+        Panel alto = new Panel(new FlowLayout(FlowLayout.LEFT, 40, 5));
+        alto.add(new Label("ID"));
+        alto.add(new Label("Nombre"));
+        alto.add(new Label("Teléfono"));
+        mainPanel.add(alto);
 
         int id = 1;
         for (Proveedor proveedor : proveedores) {
