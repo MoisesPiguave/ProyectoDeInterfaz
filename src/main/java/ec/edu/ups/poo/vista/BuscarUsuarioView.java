@@ -9,32 +9,28 @@ import java.util.List;
 
 public class BuscarUsuarioView extends Frame {
     private Button btnSalirBuscarUsuario;
-
     private TextField txtCedulaBusqueda;
     private Button btnBuscar;
     private Label resultadoLabel;
-
     private List<Usuario> usuarios;
 
     public BuscarUsuarioView(List<Usuario> usuarios) {
         super("Buscar Usuario");
-        btnSalirBuscarUsuario = new Button("Salir");
-
         this.usuarios = usuarios;
 
-        Panel mmpa = new Panel();
-        mmpa.setLayout(new GridLayout(3, 2, 10, 10));
+        Panel formPanel = new Panel(new GridLayout(2, 2, 10, 10));
+        formPanel.setBackground(Color.WHITE);
+        formPanel.setPreferredSize(new Dimension(400, 100));
 
-        mmpa.add(new Label("Ingrese Cédula:"));
+        formPanel.add(new Label("Ingrese Cédula:"));
         txtCedulaBusqueda = new TextField(20);
-        mmpa.add(txtCedulaBusqueda);
+        formPanel.add(txtCedulaBusqueda);
 
         btnBuscar = new Button("Buscar");
-        mmpa.add(btnBuscar);
+        formPanel.add(btnBuscar);
 
         resultadoLabel = new Label("");
-        mmpa.add(resultadoLabel);
-
+        formPanel.add(resultadoLabel);
 
         btnBuscar.addActionListener(new ActionListener() {
             @Override
@@ -63,14 +59,9 @@ public class BuscarUsuarioView extends Frame {
             }
         });
 
-        setLayout(new BorderLayout());
-
-        btnSalirBuscarUsuario = new Button("Salir");
         Panel panelBoton = new Panel(new FlowLayout(FlowLayout.RIGHT));
+        btnSalirBuscarUsuario = new Button("Salir");
         panelBoton.add(btnSalirBuscarUsuario);
-        add(panelBoton, BorderLayout.SOUTH);
-
-
 
         btnSalirBuscarUsuario.addActionListener(new ActionListener() {
             @Override
@@ -79,14 +70,12 @@ public class BuscarUsuarioView extends Frame {
             }
         });
 
-        add(mmpa);
+        setLayout(new BorderLayout(10, 10));
+        add(formPanel, BorderLayout.CENTER);
+        add(panelBoton, BorderLayout.SOUTH);
 
-
-
-        setSize(1000, 150);
+        setSize(600, 180);
         setLocationRelativeTo(null);
         setVisible(true);
     }
 }
-
-

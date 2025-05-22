@@ -12,6 +12,7 @@ public class ProveedorView extends Frame {
 
     private TextField txtCedulaProveedor;
     private TextField txtNombreProveedor;
+    private TextField txtTelefonoProveedor;
     private TextField txtCodigoProducto;
     private TextField txtNombreProducto;
     private TextField txtPrecioProducto;
@@ -37,6 +38,7 @@ public class ProveedorView extends Frame {
 
         txtCedulaProveedor = new TextField(20);
         txtNombreProveedor = new TextField(20);
+        txtTelefonoProveedor = new TextField(20);
         txtCodigoProducto = new TextField(20);
         txtNombreProducto = new TextField(20);
         txtPrecioProducto = new TextField(20);
@@ -53,6 +55,8 @@ public class ProveedorView extends Frame {
         panel.add(txtCedulaProveedor);
         panel.add(new Label("Nombre Proveedor:"));
         panel.add(txtNombreProveedor);
+        panel.add(new Label("Teléfono Proveedor:"));
+        panel.add(txtTelefonoProveedor);
         panel.add(btnCrearProveedor);
         panel.add(new Label(""));
 
@@ -78,15 +82,17 @@ public class ProveedorView extends Frame {
             public void actionPerformed(ActionEvent e) {
                 String cedula = txtCedulaProveedor.getText();
                 String nombre = txtNombreProveedor.getText();
+                String telefono = txtTelefonoProveedor.getText();
 
-                if (cedula.isEmpty() || nombre.isEmpty()) {
-                    mensajeLabel.setText("Debe ingresar cédula y nombre del proveedor.");
+                if (cedula.isEmpty() || nombre.isEmpty() || telefono.isEmpty()) {
+                    mensajeLabel.setText("Debe ingresar cédula, nombre y teléfono del proveedor.");
                     return;
                 }
 
                 proveedor = new Proveedor();
                 proveedor.setCedula(cedula);
                 proveedor.setNombre(nombre);
+                proveedor.setTelefono(telefono);
                 mensajeLabel.setText("Proveedor creado.");
             }
         });
@@ -144,6 +150,7 @@ public class ProveedorView extends Frame {
 
                 txtCedulaProveedor.setText("");
                 txtNombreProveedor.setText("");
+                txtTelefonoProveedor.setText("");
                 txtCodigoProducto.setText("");
                 txtNombreProducto.setText("");
                 txtPrecioProducto.setText("");
@@ -155,9 +162,7 @@ public class ProveedorView extends Frame {
         btnSalirProveedor.addActionListener(e -> dispose());
 
         add(panel);
-        setSize(500, 450);
+        setSize(500, 500);
         setVisible(true);
     }
 }
-
-

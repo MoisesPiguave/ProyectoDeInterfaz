@@ -8,10 +8,12 @@ public class SolicitudDeCompra {
     private Usuario usuario;
     private List<Producto> productos;
     private List<Integer> cantidades;
+    private Estado estado;
 
     public SolicitudDeCompra() {
         productos = new ArrayList<>();
         cantidades = new ArrayList<>();
+        this.estado = Estado.SOLICITADA; // Estado inicial
     }
 
     public void setUsuario(Usuario usuario) {
@@ -35,16 +37,21 @@ public class SolicitudDeCompra {
         return cantidades;
     }
 
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Solicitud de Compra para ").append(usuario.getNombre()).append(":\n");
+        String resultado = "Solicitud de Compra para " + usuario.getNombre() + ":\n";
         for (int i = 0; i < productos.size(); i++) {
-            sb.append("- ")
-                    .append(productos.get(i).getNombreDeProducto())
-                    .append(" x ").append(cantidades.get(i))
-                    .append("\n");
+            resultado += "- " + productos.get(i).getNombreDeProducto() + " x " + cantidades.get(i) + "\n";
         }
-        return sb.toString();
+        resultado += "Estado: " + (estado != null ? estado.name() : "N/A");
+        return resultado;
     }
 }

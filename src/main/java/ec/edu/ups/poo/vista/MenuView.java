@@ -113,7 +113,6 @@ public class MenuView extends Frame {
         Button btnBuscarProducto = new Button("Buscar Producto");
         Button btnBuscarSolicitud = new Button("Buscar Solicitud");
         Button btnCambiarEstadoSolicitud = new Button("Cambiar Estado Solicitud");
-        Button btnMostrarTotalSolicitud = new Button("Mostrar Total Solicitud");
         Button btnSalir = new Button("Salir");
 
         menuPanel.add(btnRegistrarUsuario);
@@ -127,7 +126,6 @@ public class MenuView extends Frame {
         menuPanel.add(btnBuscarProducto);
         menuPanel.add(btnBuscarSolicitud);
         menuPanel.add(btnCambiarEstadoSolicitud);
-        menuPanel.add(btnMostrarTotalSolicitud);
         menuPanel.add(btnSalir);
 
         Label estadoLabel = new Label("");
@@ -148,12 +146,10 @@ public class MenuView extends Frame {
         });
 
         btnCrearSolicitudCompra.addActionListener(e -> {
-            // obtener todos los productos de todos los proveedores
             List<Producto> productos = new ArrayList<>();
             for (Proveedor p : proveedores) {
                 productos.addAll(p.getProductos());
             }
-
             new SolicitudDeCompraView(usuarios, productos, solicitudes);
             estadoLabel.setText("Abrió ventana Crear Solicitud de Compra");
         });
@@ -188,9 +184,17 @@ public class MenuView extends Frame {
             estadoLabel.setText("Abrió ventana Buscar Producto");
         });
 
-        btnBuscarSolicitud.addActionListener(e -> estadoLabel.setText("Funcionalidad Buscar Solicitud no implementada"));
-        btnCambiarEstadoSolicitud.addActionListener(e -> estadoLabel.setText("Funcionalidad Cambiar Estado Solicitud no implementada"));
-        btnMostrarTotalSolicitud.addActionListener(e -> estadoLabel.setText("Funcionalidad Mostrar Total Solicitud no implementada"));
+        btnBuscarSolicitud.addActionListener(e -> {
+            new BuscarSolicitudView(solicitudes);
+            estadoLabel.setText("Abrió ventana Buscar Solicitud");
+        });
+
+        btnCambiarEstadoSolicitud.addActionListener(e -> {
+            Usuario usuarioAdmin = new Usuario();
+            usuarioAdmin.setRol(Rol.ADMINISTRADOR);
+            new CambiarEstadoView(solicitudes, usuarioAdmin);
+            estadoLabel.setText("Abrió ventana Cambiar Estado Solicitud");
+        });
 
         btnSalir.addActionListener(e -> {
             dispose();

@@ -15,34 +15,46 @@ public class ListProveedorView extends Frame {
         btnSalirListProovedor = new Button("Salir");
 
         Panel mainPanel = new Panel();
-        mainPanel.setLayout(new GridLayout(0, 1, 0, 8)); // espacio vertical entre filas
+        mainPanel.setLayout(new GridLayout(0, 1, 0, 5));
 
+        Font headerFont = new Font("SansSerif", Font.BOLD, 14);
+        Font rowFont = new Font("Monospaced", Font.PLAIN, 12);
 
-        Panel alto = new Panel(new FlowLayout(FlowLayout.LEFT, 40, 5));
-        alto.add(new Label("ID"));
-        alto.add(new Label("Nombre"));
-        alto.add(new Label("Teléfono"));
-        mainPanel.add(alto);
+        Panel encabezado = new Panel(new GridLayout(1, 3));
+        Label lblId = new Label("ID", Label.LEFT);
+        Label lblNombre = new Label("Nombre", Label.LEFT);
+        Label lblTelefono = new Label("Teléfono", Label.LEFT);
+        lblId.setFont(headerFont);
+        lblNombre.setFont(headerFont);
+        lblTelefono.setFont(headerFont);
+        encabezado.add(lblId);
+        encabezado.add(lblNombre);
+        encabezado.add(lblTelefono);
+        mainPanel.add(encabezado);
 
-        int id = 1;
         for (Proveedor proveedor : proveedores) {
-            Panel row = new Panel(new FlowLayout(FlowLayout.LEFT, 40, 5));
-            row.add(new Label(String.valueOf(id++)));
-            row.add(new Label(proveedor.getNombre()));
-            row.add(new Label(proveedor.getTelefono()));
-            mainPanel.add(row);
+            Panel fila = new Panel(new GridLayout(1, 3));
+            Label lblCedula = new Label(proveedor.getCedula(), Label.LEFT);
+            Label lblNombreProveedor = new Label(proveedor.getNombre(), Label.LEFT);
+            Label lblTelefonoProveedor = new Label(proveedor.getTelefono(), Label.LEFT);
+            lblCedula.setFont(rowFont);
+            lblNombreProveedor.setFont(rowFont);
+            lblTelefonoProveedor.setFont(rowFont);
+            fila.add(lblCedula);
+            fila.add(lblNombreProveedor);
+            fila.add(lblTelefonoProveedor);
+            mainPanel.add(fila);
         }
-        setLayout(new BorderLayout());
-
-        btnSalirListProovedor = new Button("Salir");
-        Panel panelBoton = new Panel(new FlowLayout(FlowLayout.RIGHT));
-        panelBoton.add(btnSalirListProovedor);
-        add(panelBoton, BorderLayout.SOUTH);
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.add(mainPanel);
 
-        add(scrollPane);
+        Panel panelBoton = new Panel(new FlowLayout(FlowLayout.RIGHT));
+        panelBoton.add(btnSalirListProovedor);
+
+        setLayout(new BorderLayout());
+        add(scrollPane, BorderLayout.CENTER);
+        add(panelBoton, BorderLayout.SOUTH);
 
         btnSalirListProovedor.addActionListener(new ActionListener() {
             @Override
@@ -51,9 +63,8 @@ public class ListProveedorView extends Frame {
             }
         });
 
-        setSize(500, 300);
+        setSize(500, 400);
         setLocationRelativeTo(null);
         setVisible(true);
     }
 }
-
