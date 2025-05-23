@@ -23,7 +23,7 @@ public class SolicitudDeCompraView extends Frame {
     private Button crearSolicitudButton;
     private Button salirButton;
 
-    // Lista para campos de cantidad por producto
+
     private java.util.List<TextField> cantidadFields;
 
     public SolicitudDeCompraView(List<Usuario> usuarios, List<Producto> productos, List<SolicitudDeCompra> solicitudes) {

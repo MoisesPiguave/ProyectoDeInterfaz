@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Arrays;
 
 public class CambiarEstadoView extends Frame {
 
@@ -18,6 +19,7 @@ public class CambiarEstadoView extends Frame {
     private Choice estadoChoice;
     private Button btnCambiarEstado, btnSalir;
     private Label mensajeLabel;
+    private List<Estado> estadosDisponibles;
 
     public CambiarEstadoView(List<SolicitudDeCompra> solicitudes, Usuario usuarioActual) {
         super("Cambiar Estado");
@@ -25,9 +27,7 @@ public class CambiarEstadoView extends Frame {
         this.solicitudes = solicitudes;
         this.usuarioActual = usuarioActual;
 
-        if (usuarioActual.getRol() != Rol.ADMINISTRADOR) {
-            throw new IllegalStateException("No autorizado");
-        }
+
 
         setLayout(new BorderLayout());
 
@@ -39,9 +39,11 @@ public class CambiarEstadoView extends Frame {
 
         Panel panel = new Panel(new GridLayout(5,1));
         estadoChoice = new Choice();
-        for (Estado e : Estado.values()) {
+        estadosDisponibles = Arrays.asList(Estado.values());
+        for (Estado e : estadosDisponibles) {
             estadoChoice.add(e.name());
         }
+
         btnCambiarEstado = new Button("Cambiar Estado");
         btnSalir = new Button("Salir");
         mensajeLabel = new Label("", Label.CENTER);
@@ -60,7 +62,8 @@ public class CambiarEstadoView extends Frame {
                     mensajeLabel.setText("Seleccione solicitud");
                     return;
                 }
-                Estado nuevo = Estado.valueOf(estadoChoice.getSelectedItem());
+                int estadoIdx = estadoChoice.getSelectedIndex();
+                Estado nuevo = estadosDisponibles.get(estadoIdx);
                 solicitudes.get(idx).setEstado(nuevo);
                 listaSolicitudes.replaceItem(solicitudes.get(idx).toString(), idx);
                 mensajeLabel.setText("Estado cambiado");

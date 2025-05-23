@@ -2,6 +2,7 @@ package ec.edu.ups.poo.vista;
 
 import ec.edu.ups.poo.modelo.SolicitudDeCompra;
 import ec.edu.ups.poo.modelo.Producto;
+import ec.edu.ups.poo.modelo.Usuario;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -43,8 +44,8 @@ public class BuscarSolicitudView extends Frame {
         setLayout(new BorderLayout(10, 10));
         add(panelSuperior, BorderLayout.NORTH);
         add(resultadoLabel, BorderLayout.CENTER);
-        add(detallesArea, BorderLayout.SOUTH);
-        add(panelBoton, BorderLayout.AFTER_LAST_LINE);
+        add(detallesArea, BorderLayout.EAST);
+        add(panelBoton, BorderLayout.SOUTH);
 
         btnBuscar.addActionListener(new ActionListener() {
             @Override
@@ -66,7 +67,7 @@ public class BuscarSolicitudView extends Frame {
     }
 
     private void buscarSolicitud() {
-        String nombre = txtNombreBusqueda.getText().trim();
+        String nombre = txtNombreBusqueda.getText();
 
         if (nombre.isEmpty()) {
             resultadoLabel.setText("Por favor ingrese un nombre de usuario.");
@@ -74,47 +75,57 @@ public class BuscarSolicitudView extends Frame {
             return;
         }
 
-        SolicitudDeCompra encontrada = null;
+        List<SolicitudDeCompra> encontradas = new java.util.ArrayList<>();
+
         for (SolicitudDeCompra s : solicitudes) {
             if (s.getUsuario().getNombre().equalsIgnoreCase(nombre)) {
-                encontrada = s;
-                break;
+                encontradas.add(s);
             }
         }
 
-        if (encontrada == null) {
+        if (encontradas.isEmpty()) {
             resultadoLabel.setText("No se encontró la solicitud para el usuario: " + nombre);
             detallesArea.setText("");
             return;
         }
 
-        resultadoLabel.setText("Solicitud encontrada para: " + encontrada.getUsuario().getNombre());
+        resultadoLabel.setText("Se encontraron " + encontradas.size() + " solicitud(es) para: " + nombre);
 
         StringBuilder texto = new StringBuilder();
-        texto.append("Usuario: " + encontrada.getUsuario().getNombre() + " " + encontrada.getUsuario().getApellido() + "\n");
-        texto.append("Cédula: " + encontrada.getUsuario().getCedula() + "\n");
-        texto.append("Departamento: " + encontrada.getUsuario().getDepartamento() + "\n");
-        texto.append("Estado de la solicitud: " + encontrada.getEstado() + "\n\n");
-        texto.append("Productos solicitados:\n");
 
-        List<Producto> productos = encontrada.getProductos();
-        List<Integer> cantidades = encontrada.getCantidades();
+        for (int idx = 0; idx < encontradas.size(); idx++) {
+            SolicitudDeCompra encontrada = encontradas.get(idx);
+            Usuario u = encontrada.getUsuario();
 
-        double total = 0;
+            texto.append("SOLICITUD #").append(idx + 1).append("\n");
+            texto.append("DATOS DEL USUARIO\n");
+            texto.append("Cédula: ").append(u.getCedula()).append("\n");
+            texto.append("Nombre: ").append(u.getNombre()).append(" ").append(u.getApellido()).append("\n");
+            texto.append("Teléfono: ").append(u.getTelefono()).append("\n");
+            texto.append("Departamento: ").append(u.getDepartamento()).append("\n");
+            texto.append("Rol: ").append(u.getRol() != null ? u.getRol().name() : "No definido").append("\n");
+            texto.append("Estado de la solicitud: ").append(encontrada.getEstado().name()).append("\n\n");
 
-        for (int i = 0; i < productos.size(); i++) {
-            Producto p = productos.get(i);
-            int cantidad = cantidades.get(i);
-            double subtotal = p.getPrecioUnidad() * cantidad;
-            total += subtotal;
+            texto.append("PRODUCTOS SOLICITADOS\n");
+            List<Producto> productos = encontrada.getProductos();
+            List<Integer> cantidades = encontrada.getCantidades();
+            double total = 0;
 
-            texto.append("- Producto: " + p.getNombreDeProducto() + "\n");
-            texto.append("  Cantidad: " + cantidad + "\n");
-            texto.append("  Precio unitario: $" + p.getPrecioUnidad() + "\n");
-            texto.append("  Subtotal: $" + subtotal + "\n");
+            for (int i = 0; i < productos.size(); i++) {
+                Producto p = productos.get(i);
+                int cantidad = cantidades.get(i);
+                double subtotal = p.getPrecioUnidad() * cantidad;
+                total += subtotal;
+
+                texto.append("- Producto: ").append(p.getNombreDeProducto()).append("\n");
+                texto.append("  Cantidad: ").append(cantidad).append("\n");
+                texto.append("  Precio unitario: $").append(p.getPrecioUnidad()).append("\n");
+                texto.append("  Subtotal: $").append(subtotal).append("\n");
+            }
+
+            texto.append("TOTAL A PAGAR: $").append(total).append("\n");
+            texto.append("\n---------------------------------------------\n\n");
         }
-
-        texto.append("TOTAL A PAGAR: $" + total);
 
         detallesArea.setText(texto.toString());
     }
