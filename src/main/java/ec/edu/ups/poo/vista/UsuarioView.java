@@ -98,7 +98,7 @@ public class UsuarioView extends Frame {
                     return;
                 }
 
-                // Validar rol sin try/catch
+                
                 boolean rolValido = false;
                 for (Rol r : Rol.values()) {
                     if (r.name().equals(rolTexto)) {
@@ -115,7 +115,7 @@ public class UsuarioView extends Frame {
                 usuarios.add(nuevoUsuario);
                 mensajeLabel.setText("Usuario registrado correctamente.");
 
-                // Limpiar campos
+
                 txtCedula.setText("");
                 txtNombre.setText("");
                 txtApellido.setText("");
