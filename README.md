@@ -14,7 +14,9 @@
 ---
 ## 👥 Participantes:
 
-- **Moises Piguave y Sebastian Calderon https://github.com/MoisesPiguave/ProyectoDeInterfaz**
+- **Moises Piguave y Sebastian Calderon
+- https://youtu.be/dJPqn8p1buU
+- https://github.com/MoisesPiguave/ProyectoDeInterfaz**
 
 ## 🛠️ Descripción
 

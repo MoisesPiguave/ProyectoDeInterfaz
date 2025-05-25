@@ -23,7 +23,6 @@ public class SolicitudDeCompraView extends Frame {
     private Button crearSolicitudButton;
     private Button salirButton;
 
-
     private java.util.List<TextField> cantidadFields;
 
     public SolicitudDeCompraView(List<Usuario> usuarios, List<Producto> productos, List<SolicitudDeCompra> solicitudes) {
@@ -54,7 +53,7 @@ public class SolicitudDeCompraView extends Frame {
 
         for (Producto producto : productos) {
             productosPanel.add(new Label(producto.getIdProducto() + " - " + producto.getNombreDeProducto()));
-            TextField cantidadField = new TextField("0");  // default 0
+            TextField cantidadField = new TextField("0");
             cantidadFields.add(cantidadField);
             productosPanel.add(cantidadField);
         }
@@ -71,7 +70,7 @@ public class SolicitudDeCompraView extends Frame {
         botonesPanel.add(crearSolicitudButton);
         botonesPanel.add(salirButton);
 
-        formPanel.add(new Label("")); // espacio vacío
+        formPanel.add(new Label(""));
         formPanel.add(botonesPanel);
 
         add(formPanel, BorderLayout.CENTER);
@@ -132,20 +131,18 @@ public class SolicitudDeCompraView extends Frame {
 
         for (int i = 0; i < productos.size(); i++) {
             String cantidadStr = cantidadFields.get(i).getText().trim();
-            if (!cantidadStr.isEmpty()) {
-                try {
-                    int cantidad = Integer.parseInt(cantidadStr);
-                    if (cantidad > 0) {
-                        hayProductoSeleccionado = true;
-                        Producto p = productos.get(i);
-                        solicitud.agregarProducto(p, cantidad);
-                        total += p.getPrecioUnidad() * cantidad;
-                    }
-                } catch (NumberFormatException ex) {
-                    estadoLabel.setText("Cantidad inválida para producto: " + productos.get(i).getNombreDeProducto());
-                    totalLabel.setText("Total: $0.00");
-                    return;
+            if (!cantidadStr.isEmpty() && esEntero(cantidadStr)) {
+                int cantidad = Integer.parseInt(cantidadStr);
+                if (cantidad > 0) {
+                    hayProductoSeleccionado = true;
+                    Producto p = productos.get(i);
+                    solicitud.agregarProducto(p, cantidad);
+                    total += p.getPrecioUnidad() * cantidad;
                 }
+            } else if (!cantidadStr.isEmpty()) {
+                estadoLabel.setText("Cantidad inválida para producto: " + productos.get(i).getNombreDeProducto());
+                totalLabel.setText("Total: $0.00");
+                return;
             }
         }
 
@@ -158,5 +155,13 @@ public class SolicitudDeCompraView extends Frame {
         solicitudes.add(solicitud);
         estadoLabel.setText("Solicitud creada correctamente.");
         totalLabel.setText(String.format("Total: $%.2f", total));
+    }
+
+    private boolean esEntero(String str) {
+        if (str == null || str.isEmpty()) return false;
+        for (char c : str.toCharArray()) {
+            if (!Character.isDigit(c)) return false;
+        }
+        return true;
     }
 }
