@@ -29,13 +29,13 @@ public class ListProductoView extends Frame {
             for (Producto producto : productos) {
                 Panel filaPanel = new Panel(new GridLayout(1, 4));
                 filaPanel.add(new Label(producto.getNombreDeProducto(), Label.CENTER));
-                filaPanel.add(new Label("" + producto.getCantidadEnStock(), Label.CENTER));
-                double precio = Math.round(producto.getPrecioUnidad() * 100) / 100.0;
-                filaPanel.add(new Label("" + precio, Label.CENTER));
+                filaPanel.add(new Label(String.valueOf(producto.getCantidadEnStock()), Label.CENTER));
+                filaPanel.add(new Label(String.format("%.2f", producto.getPrecioUnidad()), Label.CENTER));
                 filaPanel.add(new Label(proveedor.getNombre(), Label.CENTER));
                 mainPanel.add(filaPanel);
             }
         }
+
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.add(mainPanel);
 
