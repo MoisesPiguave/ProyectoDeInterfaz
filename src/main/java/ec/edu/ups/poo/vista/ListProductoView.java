@@ -13,44 +13,61 @@ public class ListProductoView extends Frame {
 
     public ListProductoView(List<Proveedor> proveedores) {
         super("Lista de Productos con Proveedores");
+        btnSalirListProducto = new Button("Salir");
+
 
         Panel mainPanel = new Panel();
-        mainPanel.setLayout(new GridLayout(0, 1, 0, 5));
+        mainPanel.setLayout(new GridLayout(0, 1, 0, 8));
 
-        Panel encabezadoPanel = new Panel(new GridLayout(1, 4));
-        encabezadoPanel.add(new Label("Producto", Label.CENTER));
-        encabezadoPanel.add(new Label("Cantidad", Label.CENTER));
-        encabezadoPanel.add(new Label("Precio", Label.CENTER));
-        encabezadoPanel.add(new Label("Proveedor", Label.CENTER));
-        mainPanel.add(encabezadoPanel);
 
-        for (Proveedor proveedor : proveedores) {
-            List<Producto> productos = proveedor.getProductos();
-            for (Producto producto : productos) {
-                Panel filaPanel = new Panel(new GridLayout(1, 4));
-                filaPanel.add(new Label(producto.getNombreDeProducto(), Label.CENTER));
-                filaPanel.add(new Label(String.valueOf(producto.getCantidadEnStock()), Label.CENTER));
-                filaPanel.add(new Label(String.format("%.2f", producto.getPrecioUnidad()), Label.CENTER));
-                filaPanel.add(new Label(proveedor.getNombre(), Label.CENTER));
-                mainPanel.add(filaPanel);
-            }
-        }
 
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.add(mainPanel);
+
+        Panel panelcito = new Panel(new FlowLayout(FlowLayout.LEFT, 10, 3));
+        panelcito.add(new Label("Producto "));
+        panelcito.add(new Label("Cantidad "));
+        panelcito.add(new Label("Precio "));
+        panelcito.add(new Label("Proveedor "));
+        mainPanel.add(panelcito);
 
         setLayout(new BorderLayout());
-        add(scrollPane, BorderLayout.CENTER);
 
         btnSalirListProducto = new Button("Salir");
         Panel panelBoton = new Panel(new FlowLayout(FlowLayout.RIGHT));
         panelBoton.add(btnSalirListProducto);
         add(panelBoton, BorderLayout.SOUTH);
 
-        btnSalirListProducto.addActionListener(e -> dispose());
+
+
+        for (Proveedor proveedor : proveedores) {
+            List<Producto> productos = proveedor.getProductos();
+            for (Producto producto : productos) {
+                Panel panelsote = new Panel(new FlowLayout(FlowLayout.LEFT, 10, 3));
+                panelsote.add(new Label(producto.getNombreDeProducto()));
+                panelsote.add(new Label(String.valueOf(producto.getCantidadEnStock())));
+                panelsote.add(new Label(String.format("%.2f", producto.getPrecioUnidad())));
+                panelsote.add(new Label(proveedor.getNombre()));
+                mainPanel.add(panelsote);
+            }
+        }
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.add(mainPanel);
+
+        add(scrollPane);
+
+        btnSalirListProducto.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+
 
         setSize(600, 400);
         setLocationRelativeTo(null);
         setVisible(true);
     }
 }
+
+
+
